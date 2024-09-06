@@ -97,5 +97,4 @@ CompressedWriteBuffer::~CompressedWriteBuffer()
     LOG_DEBUG(getLogger("CompressedWriteBuffer"), "dtor");
 }
 
-
 }
