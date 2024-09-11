@@ -72,7 +72,7 @@ ssize_t WriteBufferFromPocoSocket::socketSendBytesImpl(const char * ptr, size_t 
     return res;
 }
 
-void WriteBufferFromPocoSocket::socketSendBytes(const char * ptr, size_t size)
+    void WriteBufferFromPocoSocket::socketSendBytes(const char * ptr, size_t size)
 {
     if (!size)
         return;
@@ -127,6 +127,8 @@ void WriteBufferFromPocoSocket::socketSendBytes(const char * ptr, size_t size)
 
 void WriteBufferFromPocoSocket::nextImpl()
 {
+    LOG_DEBUG(getLogger("WriteBufferFromPocoSocket"), "nextImpl");
+
     if (!offset())
         return;
 

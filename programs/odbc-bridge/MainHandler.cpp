@@ -11,6 +11,7 @@
 #include <IO/ReadHelpers.h>
 #include <Core/Settings.h>
 #include <IO/ReadBufferFromIStream.h>
+#include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <Poco/Net/HTMLForm.h>
@@ -18,6 +19,7 @@
 #include <QueryPipeline/QueryPipeline.h>
 #include <Processors/Executors/CompletedPipelineExecutor.h>
 #include <Processors/Formats/IInputFormat.h>
+#include "Common/Exception.h"
 #include <Common/BridgeProtocolVersion.h>
 #include <Common/logger_useful.h>
 #include <Server/HTTP/HTMLForm.h>
@@ -193,24 +195,7 @@ void ODBCHandler::handleRequest(HTTPServerRequest & request, HTTPServerResponse 
     catch (...)
     {
         tryLogCurrentException(log);
-
-        auto message = getCurrentExceptionMessage(true);
-        response.setStatusAndReason(
-                Poco::Net::HTTPResponse::HTTP_INTERNAL_SERVER_ERROR); // can't call process_error, because of too soon response sending
-
-        try
-        {
-            if (!out.isCanceled())
-            {
-                writeStringBinary(message, out);
-                out.finalize();
-            }
-        }
-        catch (...)
-        {
-            tryLogCurrentException(log);
-        }
-
+        out.cancelWithException(request, getCurrentExceptionCode(), getCurrentExceptionMessage(true), nullptr);
         return;
     }
 
@@ -220,7 +205,7 @@ void ODBCHandler::handleRequest(HTTPServerRequest & request, HTTPServerResponse 
     }
     catch (...)
     {
-        tryLogCurrentException(log);
+        tryLogCurrentException(log, "Failed to finalize response write buffer");
     }
 }
 

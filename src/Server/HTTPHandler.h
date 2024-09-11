@@ -81,7 +81,7 @@ private:
         bool canceled = false;
 
         bool exception_is_written = false;
-        std::function<void(WriteBuffer &, const String &)> exception_writer;
+        std::function<void(WriteBuffer &, int code, const String &)> exception_writer;
 
         bool hasDelayed() const
         {
@@ -175,8 +175,8 @@ private:
         const ProfileEvents::Event & write_event);
 
     void trySendExceptionToClient(
-        const std::string & s,
         int exception_code,
+        const std::string & s,
         HTTPServerRequest & request,
         HTTPServerResponse & response,
         Output & used_output);

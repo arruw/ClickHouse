@@ -118,7 +118,11 @@ void HTTPServerResponse::sendBuffer(const void * buffer, std::size_t length)
     hs.flush();
 
     if (request && request->getMethod() != HTTPRequest::HTTP_HEAD)
-        WriteBufferFromPocoSocket(session.socket(), write_event).write(static_cast<const char *>(buffer), length);
+    {
+        auto wb = WriteBufferFromPocoSocket(session.socket(), write_event);
+        wb.write(static_cast<const char *>(buffer), length);
+        wb.finalize();
+    }
 }
 
 void HTTPServerResponse::requireAuthentication(const std::string & realm)

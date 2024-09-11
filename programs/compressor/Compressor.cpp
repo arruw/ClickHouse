@@ -193,8 +193,8 @@ int mainEntryClickHouseCompressor(int argc, char ** argv)
             CompressedWriteBuffer to(*wb, codec, block_size);
             copyData(*rb, to);
             to.finalize();
-
         }
+
         wb->finalize();
     }
     catch (...)

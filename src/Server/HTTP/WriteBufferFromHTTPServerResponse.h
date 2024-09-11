@@ -9,9 +9,11 @@
 #include <Poco/Net/StreamSocket.h>
 #include <Common/NetException.h>
 #include <Common/Stopwatch.h>
+#include "base/defines.h"
 
 #include <mutex>
 #include <optional>
+#include <string_view>
 
 
 namespace DB
@@ -26,6 +28,8 @@ namespace DB
 class WriteBufferFromHTTPServerResponse final : public HTTPWriteBuffer
 {
 public:
+    static constexpr std::string_view EXCEPTION_MARKER = "__exception__";
+
     WriteBufferFromHTTPServerResponse(
         HTTPServerResponse & response_,
         bool is_http_method_head_,
@@ -58,7 +62,13 @@ public:
         compression_method = compression_method_;
     }
 
-    void setExceptionCode(int exception_code_);
+    bool isChunked() const;
+
+    bool isFixedLength() const;
+
+    void setExceptionCode_A(int exception_code_);
+
+    void cancelWithException(HTTPServerRequest & request, int exception_code_, const std::string & message, WriteBuffer * compression_buffer) noexcept;
 
 private:
     /// Send at least HTTP headers if no data has been sent yet.
