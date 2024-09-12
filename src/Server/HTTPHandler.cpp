@@ -623,12 +623,12 @@ try
     {
         LOG_DEBUG(getLogger("trySendExceptionToClient"), "drop this in compressed: {}:<{}>",
             std::distance(used_output.out_maybe_compressed->buffer().begin(), used_output.out_maybe_compressed->position()),
-            std::string_view(used_output.out_maybe_compressed->buffer().begin(),  used_output.out_maybe_compressed->position()));
+            std::string_view(used_output.out_maybe_compressed->buffer().begin(), used_output.out_maybe_compressed->position()));
         used_output.out_maybe_compressed->position() = used_output.out_maybe_compressed->buffer().begin();
 
         LOG_DEBUG(getLogger("trySendExceptionToClient"), "drop this in out: {}:<{}>",
             std::distance(used_output.out_holder->buffer().begin(), used_output.out_holder->position()),
-            std::string_view(used_output.out_holder->buffer().begin(),  used_output.out_holder->position()));
+            std::string_view(used_output.out_holder->buffer().begin(), used_output.out_holder->position()));
         used_output.out_holder->position() = used_output.out_holder->buffer().begin();
     }
 

@@ -17,7 +17,6 @@ namespace DB
 
 namespace ErrorCodes
 {
-    extern const int HTTP_LENGTH_REQUIRED;
     extern const int REQUIRED_PASSWORD;
 }
 

@@ -21,11 +21,13 @@ function ch_url() {
 }
 
 function ch_url_safe() {
-    read retval stdout_tmp stderr_tmp <<< $(run_with_error ch_url "$@")
+    read -r retval stdout_tmp stderr_tmp <<< "$(run_with_error ch_url """$@""")"
 
-    local out=$(cat "${stdout_tmp}")
+    local out=""
+    out=$(cat "${stdout_tmp}")
     rm -rf "${stdout_tmp}"
-    local err=$(cat "${stderr_tmp}")
+    local err=""
+    err=$(cat "${stderr_tmp}")
     rm -rf "${stderr_tmp}"
 
     # echo "ch_url_safe out <${out}>" 1>&2
@@ -54,26 +56,24 @@ function ch_url_safe() {
 # Check correct exceptions handling
 
 exception_pattern="DB::Exception:[[:print:]]*"
-exception_mark="_exception_header_"
+exception_mark="__exception__"
 
 function check_only_exception() {
     local res
     res=$(ch_url_safe "$@")
     # echo "$res"
-    # echo "$res" | wc -l
+    # echo -n "wc -l:"; echo "$res" | wc -l
     # echo "$res" | grep -c "$exception_pattern"
     [[ $(echo "$res" | wc -l) -eq 1 ]] || echo FAIL 1 "$@"
     [[ $(echo "$res" | grep -c "$exception_pattern") -eq 1 ]] || echo FAIL 2 "$@"
 }
 
 function check_last_line_exception() {
-    return 0
-
     local res
     res=$(ch_url_safe "$@")
-    # echo "$res" > res
-    # echo "$res" | wc -c
-    # echo "$res" | tail -n 3
+    # echo "$res"
+    # echo -n "wc -c:"; echo "$res" | wc -c
+    # echo -n "tail -n 3:"; echo "$res" | tail -n 3
     [[ $(echo "$res" | head -n 1 | grep -c "$exception_mark") -eq 0 ]] || echo FAIL 3 "$@"
     [[ $(echo "$res" | tail -n 2 | head -n 1  | grep -c "$exception_mark") -eq 1 ]] || echo FAIL 4 "$@"
     [[ $(echo "$res" | tail -n 1 | grep -c "$exception_pattern") -eq 1 ]] || echo FAIL 5 "$@"

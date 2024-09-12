@@ -117,7 +117,7 @@ void JSONCompactWithProgressRowOutputFormat::writeProgress()
 
 void JSONCompactWithProgressRowOutputFormat::finalizeImpl()
 {
-    if (exception_message.empty())
+    if (exception_message_A.empty())
     {
         JSONUtils::writeCompactAdditionalInfo(
             row_count,
@@ -131,7 +131,7 @@ void JSONCompactWithProgressRowOutputFormat::finalizeImpl()
     else
     {
         JSONUtils::writeCompactObjectStart(*ostr);
-        JSONUtils::writeException(exception_message, *ostr, settings, 0);
+        JSONUtils::writeException(exception_message_A, *ostr, settings, 0);
         JSONUtils::writeCompactObjectEnd(*ostr);
     }
     writeCString("\n", *ostr);

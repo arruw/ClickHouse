@@ -22,7 +22,6 @@ namespace DB
 namespace ErrorCodes
 {
     extern const int ABORTED;
-    extern const int TOO_MANY_SIMULTANEOUS_QUERIES;
     extern const int REQUIRED_PASSWORD;
 }
 

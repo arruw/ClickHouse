@@ -199,8 +199,10 @@ function run_with_error()
 {
     local cmd="$1"; shift
 
-    local stdout_tmp=$(mktemp -p ${CLICKHOUSE_TMP})
-    local stderr_tmp=$(mktemp -p ${CLICKHOUSE_TMP})
+    local stdout_tmp=""
+    stdout_tmp=$(mktemp -p ${CLICKHOUSE_TMP})
+    local stderr_tmp=""
+    stderr_tmp=$(mktemp -p ${CLICKHOUSE_TMP})
 
     local retval=0
     $cmd "$@" 1>${stdout_tmp} 2>${stderr_tmp} || retval="$?"

@@ -244,7 +244,7 @@ void WriteBufferFromHTTPServerResponse::cancelImpl() noexcept
 {
     LOG_DEBUG(getLogger("WriteBufferFromHTTPServerResponse"), "cancel Stack: {}", StackTrace().toString());
     // we have to close connection when it has been canceled
-    // client is waiting final empty chunk in the chunk encoding, chient has to recieve EOF instaed it ASAP
+    // client is waiting final empty chunk in the chunk encoding, chient has to receive EOF instead it ASAP
     response.setKeepAlive(false);
     HTTPWriteBuffer::cancelImpl();
 }
@@ -273,10 +273,10 @@ void WriteBufferFromHTTPServerResponse::cancelWithException(HTTPServerRequest & 
         if (compression_buffer && compression_buffer->isCanceled())
             compression_buffer = nullptr;
 
-        // propper senging
+        // proper senging
         if (!response.sent())
         {
-            LOG_DEBUG(getLogger("WriteBufferFromHTTPServerResponse"), "propper senging, {}", ErrorCodes::getName(exception_code_));
+            LOG_DEBUG(getLogger("WriteBufferFromHTTPServerResponse"), "proper senging, {}", ErrorCodes::getName(exception_code_));
 
             drainRequstIfNeded(request, response);
             // We try to send the exception message when the transmission has not been started yet
@@ -311,10 +311,10 @@ void WriteBufferFromHTTPServerResponse::cancelWithException(HTTPServerRequest & 
             // In case of plain stream all ways are questionable, but lets send the error any way.
 
             // no point to drain request, transmission has been already started hence the request has been read
-            // but make sence to try to send proper `connnection: close` header if haders are not finished yet
+            // but make sense to try to send proper `connnection: close` header if headers are not finished yet
             response.setKeepAlive(false);
 
-            // try to send proper header in case haders are not finished yet
+            // try to send proper header in case headers are not finished yet
             setExceptionCode_A(exception_code_);
 
             auto data = fmt::format("{}\r\n{}",
@@ -347,7 +347,7 @@ void WriteBufferFromHTTPServerResponse::cancelWithException(HTTPServerRequest & 
             cancel();
         }
     }
-    catch(...)
+    catch (...)
     {
         tryLogCurrentException(__PRETTY_FUNCTION__, "Failed to send exception to response write buffer");
 
