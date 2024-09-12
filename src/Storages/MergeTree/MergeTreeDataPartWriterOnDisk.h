@@ -73,7 +73,7 @@ public:
         {
             LOG_DEBUG(getLogger("Stream"), "reset plain_file");
             plain_file.reset();
-            LOG_DEBUG(getLogger("Stream"), "reset plain_file");
+            LOG_DEBUG(getLogger("Stream"), "reset marks_file");
             marks_file.reset();
 
             LOG_DEBUG(getLogger("Stream"), "plain_hashing {}", plain_hashing.isFinalized());

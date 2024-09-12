@@ -292,6 +292,7 @@ void WriteBufferFromHTTPServerResponse::cancelWithException(HTTPServerRequest & 
             LOG_DEBUG(getLogger("WriteBufferFromHTTPServerResponse"), "write error {}:<{}>", message.size(), message);
             auto & out = compression_buffer ? *compression_buffer : *this;
             writeString(message, out);
+            writeChar('\n', out);
 
             LOG_DEBUG(getLogger("WriteBufferFromHTTPServerResponse"), "do finalize");
             finalize();
@@ -317,7 +318,7 @@ void WriteBufferFromHTTPServerResponse::cancelWithException(HTTPServerRequest & 
             // try to send proper header in case headers are not finished yet
             setExceptionCode_A(exception_code_);
 
-            auto data = fmt::format("{}\r\n{}",
+            auto data = fmt::format("{}\r\n{}\n",
                 EXCEPTION_MARKER,
                 message);
 
