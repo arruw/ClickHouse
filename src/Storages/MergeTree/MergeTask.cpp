@@ -146,6 +146,16 @@ public:
         return final_size;
     }
 
+    void cancelWriting()
+    {
+        if (tmp_disk)
+            tmp_disk->cancel();
+        if (write_buffer)
+            write_buffer->cancel();
+        if (uncompressed_write_buffer)
+            uncompressed_write_buffer->cancel();
+    }
+
 private:
     std::unique_ptr<TemporaryDataOnDisk> tmp_disk;
     std::unique_ptr<WriteBufferFromFileBase> uncompressed_write_buffer;
@@ -608,14 +618,11 @@ bool MergeTask::ExecuteAndFinalizeHorizontalPart::execute()
 
 void MergeTask::ExecuteAndFinalizeHorizontalPart::cancel() noexcept
 {
-    if (ctx->tmp_disk)
-        ctx->tmp_disk->cancel();
+    if (ctx->rows_sources_temporary_file)
+        ctx->rows_sources_temporary_file->cancelWriting();
 
-    if (ctx->rows_sources_uncompressed_write_buf)
-        ctx->rows_sources_uncompressed_write_buf->cancel();
-
-    if (ctx->rows_sources_write_buf)
-        ctx->rows_sources_write_buf->cancel();
+    if (ctx->merge_projection_parts_task_ptr)
+        ctx->merge_projection_parts_task_ptr->cancel();
 }
 
 
@@ -1290,22 +1297,20 @@ bool MergeTask::VerticalMergeStage::execute()
 
 void MergeTask::VerticalMergeStage::cancel() noexcept
 {
-    LOG_DEBUG(getLogger("MergeTask::VerticalMergeStage::cancel"), "begin");
-
-    if (ctx->rows_sources_uncompressed_write_buf)
-        ctx->rows_sources_uncompressed_write_buf->cancel();
-
-    if (ctx->rows_sources_write_buf)
-        ctx->rows_sources_write_buf->cancel();
-
-    if (ctx->tmp_disk)
-        ctx->tmp_disk->cancel();
+    if (ctx->rows_sources_temporary_file)
+        ctx->rows_sources_temporary_file->cancelWriting();
 
     if (ctx->column_to)
         ctx->column_to->cancel();
 
+    if (ctx->prepared_pipeline.has_value())
+        ctx->prepared_pipeline->pipeline.cancel();
+
     for (auto & stream : ctx->delayed_streams)
         stream->cancel();
+
+    if (ctx->executor)
+        ctx->executor->cancel();
 
     LOG_DEBUG(getLogger("MergeTask::VerticalMergeStage::cancel"), "end");
 }
