@@ -57,7 +57,7 @@ bool HTTPServerSession::hasMoreRequests()
         return buffered() > 0 || socket().poll(_keepAliveTimeout, Socket::SELECT_READ);
     }
     else
-        return false;
+    	return false;
 }
 
 

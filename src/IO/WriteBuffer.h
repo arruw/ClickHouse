@@ -250,6 +250,7 @@ public:
 };
 
 
+/// That class is applied only by HTTPServerResponse.
 template<class Base>
 class AutoFinalizedWriteBuffer final : public Base
 {

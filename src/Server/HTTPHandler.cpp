@@ -285,7 +285,7 @@ void HTTPHandler::processQuery(
 
     if (internal_compression)
     {
-        used_output.out_compressed_holder = std::make_shared<AutoCanceledWriteBuffer<CompressedWriteBuffer>>(*used_output.out);
+        used_output.out_compressed_holder = std::make_shared<CompressedWriteBuffer>(*used_output.out);
         used_output.out_maybe_compressed = used_output.out_compressed_holder;
     }
     else
