@@ -69,6 +69,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <cstdio>
 #include <iostream>
 #include <filesystem>
 #include <limits>
@@ -2558,9 +2559,7 @@ void ClientBase::runInteractive()
         catch (const ErrnoException & e)
         {
             if (e.getErrno() != EEXIST)
-            {
                 error_stream << getCurrentExceptionMessage(false) << '\n';
-            }
         }
     }
 
