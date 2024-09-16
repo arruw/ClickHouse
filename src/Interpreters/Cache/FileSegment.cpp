@@ -940,7 +940,9 @@ void FileSegment::setDetachedState(const FileSegmentGuard::Lock & lock)
     setDownloadState(State::DETACHED, lock);
     key_metadata.reset();
     queue_iterator = nullptr;
-    cache_writer->cancel();
+    if (cache_writer)
+        cache_writer->cancel();
+    cache_writer = nullptr;
 }
 
 void FileSegment::detach(const FileSegmentGuard::Lock & lock, const LockedKey &)
