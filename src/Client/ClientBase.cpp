@@ -1373,6 +1373,8 @@ void ClientBase::resetOutput()
         out_file_buf->finalize();
     out_file_buf.reset();
 
+    out_logs_buf.reset();
+
     if (pager_cmd)
     {
         pager_cmd->in.close();
@@ -1388,12 +1390,6 @@ void ClientBase::resetOutput()
         setupSignalHandler();
     }
     pager_cmd = nullptr;
-
-    if (out_logs_buf)
-    {
-        out_logs_buf->finalize();
-        out_logs_buf.reset();
-    }
 
     std_out.next();
 }
