@@ -355,32 +355,9 @@ void Connection::disconnect()
     LOG_DEBUG(getLogger("Connection::disconnect"), "begin");
     in = nullptr;
     last_input_packet_type.reset();
-    std::exception_ptr finalize_exception;
 
-    try
-    {
-        // finalize() can write and throw an exception.
-        if (maybe_compressed_out)
-            maybe_compressed_out->finalize();
-
-        if (out)
-            out->finalize();
-
-        if (socket)
-            socket->close();
-    }
-    catch (...)
-    {
-        /// Don't throw an exception here, it will leave Connection in invalid state.
-        finalize_exception = std::current_exception();
-
-        cancel();
-    }
-
-    reset();
-
-    if (finalize_exception)
-        std::rethrow_exception(finalize_exception);
+    // no point to finalize tcp connections
+    cancel();
 
     LOG_DEBUG(getLogger("Connection::disconnect"), "end");
 }

@@ -45,10 +45,6 @@ void WriteBufferFromHTTPServerResponse::startSendHeaders()
             /// data, so "Connection: close" should be sent.
             response.setKeepAlive(false);
         }
-        else
-        {
-            setFixedLength(response.getContentLength());
-        }
 
         if (add_cors_header)
             response.set("Access-Control-Allow-Origin", "*");
