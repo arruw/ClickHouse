@@ -176,7 +176,7 @@ private:
 
     void trySendExceptionToClient(
         int exception_code,
-        const std::string & s,
+        const std::string & message,
         HTTPServerRequest & request,
         HTTPServerResponse & response,
         Output & used_output);
